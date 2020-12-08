@@ -12,7 +12,7 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
-    "start": "set PORT=30662 && react-scripts start",
+    "start": "set PORT=6420 && react-scripts start",
     "build": "react-scripts build",
     "build:package": "cd ../../../lib/msal-react && npm run build:all",
     "test": "react-scripts test",

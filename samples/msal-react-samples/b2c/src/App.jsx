@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from "@azure/msal-react";
-import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig, loginRequest } from "./authConfig";
+import { PublicClientApplication, EventType, InteractionType } from "@azure/msal-browser";
+import { msalConfig, loginRequest, forgotPasswordRequest } from "./authConfig";
 import { PageLayout } from "./ui.jsx";
 import Button from "react-bootstrap/Button";
 import "./styles/App.css";
@@ -32,6 +32,27 @@ const ProfileContent = () => {
 };
 
 const MainContent = () => {    
+    const { instance } = useMsal();
+
+    useEffect(() => {
+        const callbackId = instance.addEventCallback((message) => {
+            if (message.eventType === EventType.LOGIN_FAILURE && message.interactionType === InteractionType.Redirect) {
+                if (message.error.errorMessage && message.error.errorMessage.indexOf("AADB2C90118") > -1) {
+                    instance.loginRedirect(forgotPasswordRequest)
+                    .then(() => {
+                        window.alert("Password has been reset successfully. \nPlease sign-in with your new password.");
+                    });
+                }
+            }
+        });
+
+        return () => {
+            if (callbackId) {
+                instance.removeEventCallback(callbackId);
+            }
+        };
+    }, [instance]);
+
     return (
         <div className="App">
             <AuthenticatedTemplate>
