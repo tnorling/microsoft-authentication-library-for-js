@@ -15,14 +15,13 @@
         "resolveJsonModule": true
     },
     "include": [
-        "./e2eTests/*.ts",
-        "./app/test/**/*.ts"
+        "./app/**/*.ts"
     ],
     "exclude": [
         "node_modules"
     ],
     "types": [
         "node",
-        "mocha"
+        "jest"
     ]
 }

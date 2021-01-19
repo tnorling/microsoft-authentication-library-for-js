@@ -1,5 +1,6 @@
 import { Screenshot } from "../../../../../e2eTestUtils/TestUtils";
 import { Page } from "puppeteer";
+import { BrowserCacheUtils } from "../../../../../e2eTestUtils/BrowserCacheTestUtils";
 
 export async function enterCredentials(page: Page, screenshot: Screenshot, username: string, accountPwd: string): Promise<void> {
     await page.waitForNavigation({ waitUntil: "networkidle0"});
@@ -75,4 +76,15 @@ export async function waitForReturnToApp(screenshot: Screenshot, page: Page, pop
     // Wait for token acquisition
     await page.waitForSelector("#scopes-acquired");
     await screenshot.takeScreenshot(page, "samplePageLoggedIn");
+}
+
+export async function verifyTokenStore(BrowserCache: BrowserCacheUtils, scopes: string[]): Promise<void> {
+    const tokenStore = await BrowserCache.getTokens();
+    expect(tokenStore.idTokens.length).toBe(1);
+    expect(tokenStore.accessTokens.length).toBe(1);
+    expect(tokenStore.refreshTokens.length).toBe(1);
+    expect(await BrowserCache.getAccountFromCache(tokenStore.idTokens[0])).not.toBe(null);
+    expect(await BrowserCache.accessTokenForScopesExists(tokenStore.accessTokens, scopes)).toBe(true);
+    const storage = await BrowserCache.getWindowStorage();
+    expect(Object.keys(storage).length).toBe(4);
 }

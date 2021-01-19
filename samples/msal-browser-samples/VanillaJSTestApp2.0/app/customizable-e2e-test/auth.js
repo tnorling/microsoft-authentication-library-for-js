@@ -1,3 +1,5 @@
+import * as msal from "@azure/msal-browser";
+
 let signInType;
 let homeAccountId = "";
 
