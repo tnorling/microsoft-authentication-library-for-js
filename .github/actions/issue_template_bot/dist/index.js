@@ -10253,6 +10253,7 @@ async function run() {
         core.setFailed("Can only run on issues!");
         return;
     }
+    core.info(`${JSON.stringify(github.context.payload.changes.old_issue)}`);
     const payload = github.context.payload;
     if (!payload) {
         core.setFailed("No payload!");
