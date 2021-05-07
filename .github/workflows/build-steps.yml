@@ -60,24 +60,12 @@ jobs:
       working-directory: lib/${{ matrix.library }}
       run: npm run test:coverage
 
-    - name: Coveralls
-      if: success() && ${{ env.NOT_FROM_FORK == 'true' }}
-      uses: coverallsapp/github-action@master
+    - name: Upload Test Coverage to CodeCov
+      if: success()
+      uses: codecov/codecov-action@v1
       with:
-        github-token: ${{ secrets.github_token }}
-        flag-name: ${{ matrix.library }}
-        base-path: lib/${{ matrix.library }}
-        path-to-lcov: lib/${{ matrix.library }}/coverage/lcov.info
-        parallel: true
+        files: lib/${{ matrix.library }}/coverage/lcov.info
+        flags: ${{ matrix.library }}
+        verbose: true # optional (default = false)
+      
 
-  Coveralls:
-    needs: build-test
-    runs-on: ubuntu-latest
-    if: (github.repository == 'AzureAD/microsoft-authentication-library-for-js') && ((github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'push'))
-
-    steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        parallel-finished: true
