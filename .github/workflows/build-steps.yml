@@ -64,8 +64,8 @@ jobs:
       if: success()
       uses: codecov/codecov-action@v1
       with:
-        files: lib/${{ matrix.library }}/coverage/lcov.info
+        working-directory: lib/${{ matrix.library }}
+        files: coverage/lcov.info
         flags: ${{ matrix.library }}
-        verbose: true # optional (default = false)
       
 
