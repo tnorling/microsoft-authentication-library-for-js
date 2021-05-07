@@ -9,7 +9,7 @@ import "mocha";
 import { BrowserAuthErrorMessage } from "../../src/error/BrowserAuthError";
 import { TEST_CONFIG, TEST_TOKENS, TEST_DATA_CLIENT_INFO, RANDOM_TEST_GUID, TEST_URIS, TEST_STATE_VALUES, DEFAULT_OPENID_CONFIG_RESPONSE } from "../utils/StringConstants";
 import { CacheOptions } from "../../src/config/Configuration";
-import { Constants, PersistentCacheKeys, CommonAuthorizationCodeRequest as AuthorizationCodeRequest, ProtocolUtils, Logger, LogLevel, AuthenticationScheme, AuthorityMetadataEntity, AccountEntity, Authority, StubbedNetworkModule, CacheManager, IdToken, IdTokenEntity, AccessTokenEntity, RefreshTokenEntity, AppMetadataEntity, ServerTelemetryEntity, ThrottlingEntity } from "@azure/msal-common";
+import { Constants, PersistentCacheKeys, CommonAuthorizationCodeRequest as AuthorizationCodeRequest, ProtocolUtils, Logger, LogLevel, AuthenticationScheme, AuthorityMetadataEntity, AccountEntity, Authority, StubbedNetworkModule, CacheManager, IdToken, IdTokenEntity, AccessTokenEntity, RefreshTokenEntity, AppMetadataEntity, ServerTelemetryEntity, ThrottlingEntity, CredentialType } from "@azure/msal-common";
 import { BrowserCacheLocation, InteractionType, TemporaryCacheKeys } from "../../src/utils/BrowserConstants";
 import { CryptoOps } from "../../src/crypto/CryptoOps";
 import { DatabaseStorage } from "../../src/cache/DatabaseStorage";
@@ -136,6 +136,15 @@ describe("BrowserCacheManager tests", () => {
             expect(window.sessionStorage.getItem(msalCacheKey)).to.be.eq(cacheVal);
             expect(window.sessionStorage.getItem(msalCacheKey2)).to.be.eq(cacheVal);
         });
+
+        it("getTemporaryCache falls back to local storage if not found in session/memory storage", () => {
+            const testTempItemKey = "test-temp-item-key";
+            const testTempItemValue = "test-temp-item-value";
+            window.localStorage.setItem(testTempItemKey, testTempItemValue);
+            cacheConfig.cacheLocation = BrowserCacheLocation.LocalStorage;
+            browserLocalStorage = new BrowserCacheManager(TEST_CONFIG.MSAL_CLIENT_ID, cacheConfig, browserCrypto, logger);
+            expect(browserLocalStorage.getTemporaryCache(testTempItemKey)).equals(testTempItemValue);
+        })
 
         it("setItem", () => {
             window.sessionStorage.setItem(msalCacheKey, cacheVal);
@@ -293,7 +302,7 @@ describe("BrowserCacheManager tests", () => {
                 });
 
                 it("getAccessTokenCredential returns AccessTokenEntity", () => {
-                    const testAccessToken = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.ACCESS_TOKEN, "client-id", "tenantId", "openid", 1000, 1000,"access", "oboAssertion");
+                    const testAccessToken = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.ACCESS_TOKEN, "client-id", "tenantId", "openid", 1000, 1000, browserCrypto, 500, AuthenticationScheme.BEARER, "oboAssertion");
 
                     browserLocalStorage.setAccessTokenCredential(testAccessToken);
                     browserSessionStorage.setAccessTokenCredential(testAccessToken);
@@ -303,6 +312,44 @@ describe("BrowserCacheManager tests", () => {
                     expect(browserLocalStorage.getAccessTokenCredential(testAccessToken.generateCredentialKey())).to.deep.eq(testAccessToken);
                     expect(browserLocalStorage.getAccessTokenCredential(testAccessToken.generateCredentialKey())).to.be.instanceOf(AccessTokenEntity);
                 });
+                
+                it("getAccessTokenCredential returns Bearer access token when authentication scheme is set to Bearer and both a Bearer and pop token are in the cache", () => {
+                    const testAccessTokenWithoutAuthScheme = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.ACCESS_TOKEN, "client-id", "tenantId", "openid", 1000, 1000, browserCrypto, 500, AuthenticationScheme.BEARER, "oboAssertion");
+                    const testAccessTokenWithAuthScheme = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.POP_TOKEN, "client-id", "tenantId", "openid", 1000, 1000, browserCrypto, 500, AuthenticationScheme.POP, "oboAssertion");
+                    // Cache bearer token
+                    browserLocalStorage.setAccessTokenCredential(testAccessTokenWithoutAuthScheme);
+                    browserSessionStorage.setAccessTokenCredential(testAccessTokenWithoutAuthScheme);
+
+                    // Cache pop token
+                    browserLocalStorage.setAccessTokenCredential(testAccessTokenWithAuthScheme);
+                    browserSessionStorage.setAccessTokenCredential(testAccessTokenWithAuthScheme);
+
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey())).to.deep.eq(testAccessTokenWithoutAuthScheme);
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey()).credentialType).to.eq(CredentialType.ACCESS_TOKEN);
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey())).to.be.instanceOf(AccessTokenEntity);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey())).to.deep.eq(testAccessTokenWithoutAuthScheme);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey()).credentialType).to.eq(CredentialType.ACCESS_TOKEN);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithoutAuthScheme.generateCredentialKey())).to.be.instanceOf(AccessTokenEntity);
+                });
+
+                it("getAccessTokenCredential returns PoP access token when authentication scheme is set to pop and both a Bearer and pop token are in the cache", () => {
+                    const testAccessTokenWithoutAuthScheme = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.ACCESS_TOKEN, "client-id", "tenantId", "openid", 1000, 1000, browserCrypto, 500, AuthenticationScheme.BEARER, "oboAssertion");
+                    const testAccessTokenWithAuthScheme = AccessTokenEntity.createAccessTokenEntity("homeAccountId", "environment", TEST_TOKENS.POP_TOKEN, "client-id", "tenantId", "openid", 1000, 1000, browserCrypto, 500, AuthenticationScheme.POP, "oboAssertion");
+                    // Cache bearer token
+                    browserLocalStorage.setAccessTokenCredential(testAccessTokenWithoutAuthScheme);
+                    browserSessionStorage.setAccessTokenCredential(testAccessTokenWithoutAuthScheme);
+
+                    // Cache pop token
+                    browserLocalStorage.setAccessTokenCredential(testAccessTokenWithAuthScheme);
+                    browserSessionStorage.setAccessTokenCredential(testAccessTokenWithAuthScheme);
+
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey())).to.deep.eq(testAccessTokenWithAuthScheme);
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey()).credentialType).to.eq(CredentialType.ACCESS_TOKEN_WITH_AUTH_SCHEME);
+                    expect(browserSessionStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey())).to.be.instanceOf(AccessTokenEntity);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey())).to.deep.eq(testAccessTokenWithAuthScheme);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey()).credentialType).to.eq(CredentialType.ACCESS_TOKEN_WITH_AUTH_SCHEME);
+                    expect(browserLocalStorage.getAccessTokenCredential(testAccessTokenWithAuthScheme.generateCredentialKey())).to.be.instanceOf(AccessTokenEntity);
+                })
             });
 
             describe("RefreshTokenCredential", () => {

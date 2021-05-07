@@ -2,6 +2,62 @@
   "name": "@azure/msal-angular",
   "entries": [
     {
+      "date": "Thu, 22 Apr 2021 23:26:08 GMT",
+      "tag": "@azure/msal-angular_v2.0.0-beta.5",
+      "version": "2.0.0-beta.5",
+      "comments": {
+        "prerelease": [
+          {
+            "comment": "Prevent MSAL Guard from navigating app to url with code hash #3506",
+            "author": "janutter@microsoft.com",
+            "commit": "06904071267f726ecb5501d2b75ec71c751cb097",
+            "package": "@azure/msal-angular"
+          },
+          {
+            "comment": "Add .browserslistrc #3471",
+            "author": "thomas.norling@microsoft.com",
+            "commit": "04c6d659d4dc76183ef9043075d3b6cacc450c9b",
+            "package": "@azure/msal-angular"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Fix msal-angular packge-lock",
+            "author": "janutter@microsoft.com",
+            "commit": "41483305debd20a1345262bd0167f1bef64dfd65",
+            "package": "@azure/msal-angular"
+          },
+          {
+            "comment": "Update and fix eslint rules",
+            "author": "janutter@microsoft.com",
+            "commit": "70debe58239b6a6fdf4e533a8a1ee057257846a8",
+            "package": "@azure/msal-angular"
+          },
+          {
+            "comment": "details added to load dynamic configurations using APP_INITIALIZER",
+            "author": "itvinay12@gmail.com",
+            "commit": "d22605301e23a65e28513678a10ab8136f149e80",
+            "package": "@azure/msal-angular"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 14 Apr 2021 18:39:53 GMT",
+      "tag": "@azure/msal-angular_v2.0.0-beta.4",
+      "version": "2.0.0-beta.4",
+      "comments": {
+        "prerelease": [
+          {
+            "comment": "fix(Msal-Angular): Dynamic interceptor authority",
+            "author": "1292510+svrooij@users.noreply.github.com",
+            "commit": "ee6480557de68bb84765097e7b3aa79fb2b5977e",
+            "package": "@azure/msal-angular"
+          }
+        ]
+      }
+    },
+    {
       "date": "Wed, 31 Mar 2021 22:25:57 GMT",
       "tag": "@azure/msal-angular_v2.0.0-beta.3",
       "version": "2.0.0-beta.3",

@@ -2,11 +2,14 @@
   "name": "microsoft-authentication-libraries-for-js",
   "private": true,
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^2.0.2",
+    "@angular/compiler": "^11.2.8",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-typescript": "^7.7.2",
+    "@babel/register": "^7.13.16",
     "@istanbuljs/nyc-config-babel": "^2.1.1",
     "@octokit/graphql": "^4.6.0",
     "@octokit/rest": "^18.2.1",
@@ -25,6 +28,7 @@
     "eslint-plugin-security": "^1.4.0",
     "gh-pages": "^3.1.0",
     "lerna": "^3.22.1",
+    "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
     "rimraf": "^3.0.0",
     "semver": "^7.3.4",
@@ -48,7 +52,6 @@
     "doc:deploy": "gh-pages -d ref -a -e ref",
     "lint": "run-s lint:*",
     "lint:angular": "eslint lib/msal-angular/src --ext .ts",
-    "lint:angularjs": "eslint lib/msal-angularjs/lib --ext .js",
     "lint:browser": "eslint lib/msal-browser/src --ext .ts",
     "lint:common": "eslint lib/msal-common/src --ext .ts",
     "lint:core": "eslint lib/msal-core/src --ext .ts",
@@ -64,8 +67,5 @@
     "beachball:publish": "beachball publish -n $NODE_AUTH_TOKEN",
     "beachball:release": "node ./.github/create-releases.js"
   },
-  "dependencies": {
-    "@babel/register": "^7.7.0",
-    "npm-run-all": "^4.1.5"
-  }
+  "dependencies": {}
 }
