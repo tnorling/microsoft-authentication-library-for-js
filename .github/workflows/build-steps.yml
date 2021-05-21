@@ -34,23 +34,23 @@ jobs:
           # angular/react filter will match any path under common and browser as well as their own
           filters: |
             core:
-              - 'lib/msal-core/**.!(md)'
+              - 'lib/msal-core/**/**.!(md)'
               - '.github/workflows/build-steps.yml'
             common: &common
-              - 'lib/msal-common/**.!(md)'
+              - 'lib/msal-common/**/**.!(md)'
               - '.github/workflows/build-steps.yml'
             browser: &browser
               - *common
-              - 'lib/msal-browser/**.!(md)'
+              - 'lib/msal-browser/**/**.!(md)'
             node:
               - *common
-              - 'lib/msal-node/**.!(md)'
+              - 'lib/msal-node/**/**.!(md)'
             angular:
               - *browser
-              - 'lib/msal-angular/**.!(md)'
+              - 'lib/msal-angular/**/**.!(md)'
             react:
               - *browser
-              - 'lib/msal-react/**.!(md)'
+              - 'lib/msal-react/**/**.!(md)'
 
 
   build-test:
