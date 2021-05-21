@@ -1,8 +1,6 @@
 comment:
   layout: "flags, diff, files"
   behavior: default
-  require_base: no
-  require_head: no
   require_changes: false  
   require_base: no
   require_head: no
