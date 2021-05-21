@@ -1,6 +1,8 @@
 comment:
   layout: "flags, diff, files"
   behavior: default
+  require_base: no
+  require_head: no
   require_changes: false  
   show_carryforward_flags: true
 
