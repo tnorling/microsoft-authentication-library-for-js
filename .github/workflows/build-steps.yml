@@ -4,6 +4,9 @@
 name: Run CI
 
 on:
+  push:
+    branches: 
+      - dev
   pull_request:
     paths:
       - 'lib/**/*'
@@ -97,4 +100,3 @@ jobs:
         files: lib/msal-${{matrix.library}}/coverage/lcov.info
         flags: msal-${{ matrix.library }}
       
-
