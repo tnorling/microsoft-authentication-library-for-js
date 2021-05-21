@@ -1,0 +1,9 @@
+comment:
+  layout: "flags, diff, files"
+  behavior: default
+  require_changes: false  
+  show_carry_forward_flags: true
+
+flag_management:
+  default_rules:
+    carryforward: true

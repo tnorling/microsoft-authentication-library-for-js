@@ -4,10 +4,6 @@
 name: Run CI
 
 on:
-  push:
-    branches:
-      - 'dev'
-      - 'master'
   pull_request:
     paths:
       - 'lib/**/*'
@@ -19,22 +15,57 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    outputs: 
+      # Expose matched filters as job 'packages' output variable
+      packages: ${{ steps.filter.outputs.changes }}
+
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          # &common and &browser are YAML anchors
+          # *common and *browser references previously defined anchor
+          # browser/node filter will match any path under common as well as their own
+          # angular/react filter will match any path under common and browser as well as their own
+          filters: |
+            core:
+              - 'lib/msal-core/**'
+              - '!lib/msal-core/**.md'
+              - '.github/workflows/build-steps.yml'
+            common: &common
+              - 'lib/msal-common/**'
+              - '!lib/msal-common/**.md'
+              - '.github/workflows/build-steps.yml'
+            browser: &browser
+              - *common
+              - 'lib/msal-browser/**'
+              - '!lib/msal-browser/**.md'
+            node:
+              - *common
+              - 'lib/msal-node/**'
+              - '!lib/msal-node/**.md'
+            angular:
+              - *browser
+              - 'lib/msal-angular/**'
+              - '!lib/msal-angular/**.md'
+            react:
+              - *browser
+              - 'lib/msal-react/**'
+              - '!lib/msal-react/**.md'
+
 
   build-test:
+    needs: pre-check
     runs-on: ubuntu-latest
-    env: 
-      NOT_FROM_FORK: (github.repository == 'AzureAD/microsoft-authentication-library-for-js') && ((github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'push'))
 
     strategy:
         fail-fast: false
         matrix:
-          library:
-            - msal-core
-            - msal-common
-            - msal-browser
-            - msal-node
-            - msal-angular
-            - msal-react
+          # Parse JSON array containing names of all filters matching any of changed files
+          # e.g. ['package1', 'package2'] if both package folders contains changes
+          library: ${{ fromJSON(needs.pre-check.outputs.packages) }}
   
     steps:
     - uses: actions/checkout@v2
@@ -48,22 +79,22 @@ jobs:
       run: npm ci
 
     - name: Build packages
-      working-directory: lib/${{ matrix.library }}
+      working-directory: lib/msal-${{ matrix.library }}
       run: npm run build:all
 
     - name: Lint
-      working-directory: lib/${{ matrix.library }}
+      working-directory: lib/msal-${{ matrix.library }}
       run: npm run lint
 
     - name: Unit Tests with coverage
-      working-directory: lib/${{ matrix.library }}
+      working-directory: lib/msal-${{ matrix.library }}
       run: npm run test:coverage
 
     - name: Upload Test Coverage to CodeCov
       if: success()
       uses: codecov/codecov-action@v1
       with:
-        files: lib/${{matrix.library}}/coverage/lcov.info
-        flags: ${{ matrix.library }}
+        files: lib/msal-${{matrix.library}}/coverage/lcov.info
+        flags: msal-${{ matrix.library }}
       
 
