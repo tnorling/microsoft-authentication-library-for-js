@@ -71,7 +71,7 @@ export abstract class ClientApplication {
      * Important attributes in the Configuration object for auth are:
      * - clientID: the application ID of your application. You can obtain one by registering your application with our Application registration portal : https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredAppsPreview
      * - authority: the authority URL for your application.
-     * - redirect_uri: the uri of your application registered in the portal.
+     * - redirect_uri: the uri of your application registered in the portal
      *
      * In Azure AD, authority is a URL indicating the Azure active directory that MSAL uses to obtain tokens.
      * It is of the form https://login.microsoftonline.com/{Enter_the_Tenant_Info_Here}
