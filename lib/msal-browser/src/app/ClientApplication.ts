@@ -88,7 +88,7 @@ export abstract class ClientApplication {
     constructor(configuration: Configuration) {
         /*
          * If loaded in an environment where window is not available,
-         * set internal flag to false so that further requests fail.
+         * set internal flag to false so that further requests fail
          * This is to support server-side rendering environments.
          */
         this.isBrowserEnvironment = typeof window !== "undefined";
