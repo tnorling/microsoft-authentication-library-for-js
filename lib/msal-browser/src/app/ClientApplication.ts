@@ -73,7 +73,7 @@ export abstract class ClientApplication {
      * - authority: the authority URL for your application.
      * - redirect_uri: the uri of your application registered in the portal
      *
-     * In Azure AD, authority is a URL indicating the Azure active directory that MSAL uses to obtain tokens.
+     * In Azure AD, authority is a URL indicating the Azure active directory that MSAL uses to obtain tokens
      * It is of the form https://login.microsoftonline.com/{Enter_the_Tenant_Info_Here}
      * If your application supports Accounts in one organizational directory, replace "Enter_the_Tenant_Info_Here" value with the Tenant Id or Tenant name (for example, contoso.microsoft.com).
      * If your application supports Accounts in any organizational directory, replace "Enter_the_Tenant_Info_Here" value with organizations.
