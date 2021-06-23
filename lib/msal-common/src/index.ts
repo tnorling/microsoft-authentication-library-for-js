@@ -44,7 +44,7 @@ export { ThrottlingEntity } from "./cache/entities/ThrottlingEntity";
 export { ICachePlugin } from "./cache/interface/ICachePlugin";
 export { TokenCacheContext } from "./cache/persistence/TokenCacheContext";
 export { ISerializableTokenCache } from "./cache/interface/ISerializableTokenCache";
-// Network Interface
+// Network Interface.
 export { INetworkModule, NetworkRequestOptions, StubbedNetworkModule } from "./network/INetworkModule";
 export { NetworkManager, NetworkResponse } from "./network/NetworkManager";
 export { ThrottlingUtils } from "./network/ThrottlingUtils";
