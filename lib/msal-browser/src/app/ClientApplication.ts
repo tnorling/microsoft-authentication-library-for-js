@@ -83,7 +83,7 @@ export abstract class ClientApplication {
      * In Azure B2C, authority is of the form https://{instance}/tfp/{tenant}/{policyName}/
      * Full B2C functionality will be available in this library in future versions.
      *
-     * @param configuration Object for the MSAL PublicClientApplication instance.
+     * @param configuration Object for the MSAL PublicClientApplication instance
      */
     constructor(configuration: Configuration) {
         /*
