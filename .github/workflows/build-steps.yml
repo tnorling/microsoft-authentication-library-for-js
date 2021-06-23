@@ -91,7 +91,7 @@ jobs:
       if: success()
       uses: codecov/codecov-action@v1
       with:
-        files: coverage/lcov.info
+        files: lib/msal-${{ matrix.library }}/coverage/lcov.info
         flags: msal-${{ matrix.library }}
         gcov_root_dir: lib/msal-${{ matrix.library }}/
       
