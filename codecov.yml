@@ -8,6 +8,9 @@ comment:
   require_base: no
   require_head: no
   show_carryforward_flags: true
+  
+fixes:
+  - "::lib/"
 
 flag_management:
   default_rules:
