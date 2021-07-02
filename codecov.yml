@@ -10,14 +10,20 @@ flag_management:
   default_rules:
     carryforward: true
   msal-angular:
-    paths: lib/msal-angular
+    paths: 
+      - lib/msal-angular
   msal-browser:
-    paths: lib/msal-browser
+    paths: 
+      - lib/msal-browser
   msal-common:
-    paths: lib/msal-common
+    paths: 
+      - lib/msal-common
   msal-core:
-    paths: lib/msal-core
+    paths: 
+      - lib/msal-core
   msal-node:
-    paths: lib/msal-node
+    paths: 
+      - lib/msal-node
   msal-react:
-    paths: lib/msal-react
+    paths: 
+      - lib/msal-react
