@@ -9,3 +9,6 @@ comment:
 flag_management:
   default_rules:
     carryforward: true
+    
+ignore:
+ - "!lib/*/src/**"
