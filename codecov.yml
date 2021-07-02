@@ -5,26 +5,3 @@ comment:
   require_base: no
   require_head: no
   show_carryforward_flags: true
-
-flag_management:
-  default_rules:
-    carryforward: true
-  individual_flags:
-    - name: msal-angular
-      paths: 
-        - lib/msal-angular
-    - name: msal-browser
-      paths: 
-        - lib/msal-browser
-    - name : msal-common
-      paths: 
-        - lib/msal-common
-    - name: msal-core
-      paths: 
-        - lib/msal-core
-    - name: msal-node
-      paths: 
-        - lib/msal-node
-    - name: msal-react
-      paths: 
-        - lib/msal-react
